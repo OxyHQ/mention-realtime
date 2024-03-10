@@ -9,7 +9,7 @@ import { logger } from "./utils/logger";
 import { z } from "zod";
 import { postImage } from "./utils/upload-image";
 
-const PORT = process.env.PORT || 8080;
+const PORT = process.env.PORT || 80;
 
 const app = express();
 
