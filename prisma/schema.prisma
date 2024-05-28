@@ -37,7 +37,6 @@ model Profile {
   conversations      Conversation[] @relation("ConversationToProfile")
   followers          Profile[]      @relation("Followers")
   following          Profile[]      @relation("Followers")
-  feedbacks          Feedback[]
 }
 
 model Post {
