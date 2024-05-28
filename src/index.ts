@@ -23,7 +23,7 @@ const expressServer = app.listen(PORT, () => {
 
 const io = new Server(expressServer, {
 	cors: {
-		origin: "*",
+		origin: process.env.CLIENT_URL,
 		methods: ["GET", "POST"],
 	},
 });
