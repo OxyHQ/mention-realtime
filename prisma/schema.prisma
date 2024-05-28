@@ -37,6 +37,8 @@ model Profile {
   conversations      Conversation[] @relation("ConversationToProfile")
   followers          Profile[]      @relation("Followers")
   following          Profile[]      @relation("Followers")
+  Conversation       Conversation?  @relation(fields: [conversationId], references: [id])
+  conversationId     String?
 }
 
 model Post {
@@ -133,7 +135,9 @@ model Conversation {
   id         String    @id @default(cuid())
   created_at DateTime  @default(now())
   messages   Message[]
-  Profiles   Profile[] @relation("ConversationToProfile")
+  users      Profile[] @relation("ConversationToUser")
+  Profile    Profile?  @relation(fields: [profileId], references: [id])
+  profileId  String?
 }
 
 enum ProfileRole {
