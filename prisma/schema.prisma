@@ -68,7 +68,7 @@ model Post {
   comments                Post[]     @relation("post-comment")
   quoted_post             Post?      @relation("quoted_post", fields: [quoted_post_id], references: [id])
   quotes                  Post[]     @relation("quoted_post")
-  pinned_by_Profiles      Profile[]  @relation("pinned_post")
+  pinned_by_users         Profile[]  @relation("pinned_post")
 }
 
 model Media {
@@ -138,6 +138,7 @@ model Conversation {
   users      Profile[] @relation("ConversationToUser")
   Profile    Profile?  @relation(fields: [profileId], references: [id])
   profileId  String?
+  Profile    Profile?  @relation(fields: [profileId], references: [id])
 }
 
 enum ProfileRole {
