@@ -14,7 +14,7 @@ const PORT = process.env.PORT || 80;
 const app = express();
 
 app.get("/", (_, res) => {
-	res.send("This is a chat server.");
+	res.send("This is the mention.earth realtime server.");
 });
 
 const expressServer = app.listen(PORT, () => {
@@ -23,7 +23,7 @@ const expressServer = app.listen(PORT, () => {
 
 const io = new Server(expressServer, {
 	cors: {
-		origin: process.env.CLIENT_URL,
+		origin: "*",
 		methods: ["GET", "POST"],
 	},
 });
