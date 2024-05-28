@@ -26,7 +26,7 @@ model Profile {
   statuses_count     Int            @default(0)
   profile_banner_url String?
   pinned_post_id     String?
-  role               UserRole       @default(USER)
+  role               ProfileRole    @default(Profile)
   bookmarks          Bookmark[]
   likes              Like[]
   sent_messages      Message[]      @relation("receiver")
@@ -34,7 +34,7 @@ model Profile {
   reposts            Repost[]
   posts              Post[]
   pinned_post        Post?          @relation("pinned_post", fields: [pinned_post_id], references: [id])
-  conversations      Conversation[] @relation("ConversationToUser")
+  conversations      Conversation[] @relation("ConversationToProfile")
   followers          Profile[]      @relation("Followers")
   following          Profile[]      @relation("Followers")
   feedbacks          Feedback[]
@@ -44,30 +44,30 @@ model Post {
   id                      String     @id @default(cuid())
   text                    String?
   source                  String     @default("web")
-  in_reply_to_user_id     String?
-  in_reply_to_username String?
+  in_reply_to_Profile_id  String?
+  in_reply_to_Profilename String?
   is_quote_status         Boolean    @default(false)
   quoted_status_id        String?
   quote_count             Int        @default(0)
   reply_count             Int        @default(0)
-  repost_count           Int        @default(0)
+  repost_count            Int        @default(0)
   favorite_count          Int        @default(0)
   possibly_sensitive      Boolean    @default(false)
   lang                    String     @default("en")
   created_at              DateTime   @default(now())
-  quoted_post_id         String?
+  quoted_post_id          String?
   in_reply_to_status_id   String?
   author_id               String
   bookmarks               Bookmark[]
   likes                   Like[]
   media                   Media[]
-  reposts                Repost[]
-  author                  User       @relation(fields: [author_id], references: [id], onDelete: Cascade)
-  post_comment           Post?     @relation("post-comment", fields: [in_reply_to_status_id], references: [id])
-  comments                Post[]    @relation("post-comment")
-  quoted_post            Post?     @relation("quoted_post", fields: [quoted_post_id], references: [id])
-  quotes                  Post[]    @relation("quoted_post")
-  pinned_by_users         User[]     @relation("pinned_post")
+  reposts                 Repost[]
+  author                  Profile    @relation(fields: [author_id], references: [id], onDelete: Cascade)
+  post_comment            Post?      @relation("post-comment", fields: [in_reply_to_status_id], references: [id])
+  comments                Post[]     @relation("post-comment")
+  quoted_post             Post?      @relation("quoted_post", fields: [quoted_post_id], references: [id])
+  quotes                  Post[]     @relation("quoted_post")
+  pinned_by_Profiles      Profile[]  @relation("pinned_post")
 }
 
 model Media {
@@ -75,35 +75,35 @@ model Media {
   media_url  String
   media_type String
   media_path String
-  post_id   String?
-  post      Post?  @relation(fields: [post_id], references: [id], onDelete: Cascade)
+  post_id    String?
+  post       Post?   @relation(fields: [post_id], references: [id], onDelete: Cascade)
 }
 
 model Like {
   id         String   @id @default(cuid())
-  post_id   String
-  user_id    String
+  post_id    String
+  Profile_id String
   created_at DateTime @default(now())
-  post      Post    @relation(fields: [post_id], references: [id], onDelete: Cascade)
-  user       User     @relation(fields: [user_id], references: [id])
+  post       Post     @relation(fields: [post_id], references: [id], onDelete: Cascade)
+  Profile    Profile  @relation(fields: [Profile_id], references: [id])
 }
 
 model Repost {
   id         String   @id @default(cuid())
-  post_id   String
-  user_id    String
+  post_id    String
+  Profile_id String
   created_at DateTime @default(now())
-  post      Post    @relation(fields: [post_id], references: [id], onDelete: Cascade)
-  user       User     @relation(fields: [user_id], references: [id])
+  post       Post     @relation(fields: [post_id], references: [id], onDelete: Cascade)
+  Profile    Profile  @relation(fields: [Profile_id], references: [id])
 }
 
 model Bookmark {
   id         String   @id @default(cuid())
-  post_id   String
-  user_id    String
+  post_id    String
+  Profile_id String
   created_at DateTime @default(now())
-  post      Post    @relation(fields: [post_id], references: [id], onDelete: Cascade)
-  user       User     @relation(fields: [user_id], references: [id])
+  post       Post     @relation(fields: [post_id], references: [id], onDelete: Cascade)
+  Profile    Profile  @relation(fields: [Profile_id], references: [id])
 }
 
 model Hashtag {
@@ -126,18 +126,18 @@ model Message {
   image_height    Int?
   image_width     Int?
   conversation    Conversation @relation(fields: [conversation_id], references: [id], onDelete: Cascade)
-  receiver        User         @relation("receiver", fields: [receiver_id], references: [id], onDelete: Cascade)
-  sender          User         @relation("sender", fields: [sender_id], references: [id], onDelete: Cascade)
+  receiver        Profile      @relation("receiver", fields: [receiver_id], references: [id], onDelete: Cascade)
+  sender          Profile      @relation("sender", fields: [sender_id], references: [id], onDelete: Cascade)
 }
 
 model Conversation {
   id         String    @id @default(cuid())
   created_at DateTime  @default(now())
   messages   Message[]
-  users      User[]    @relation("ConversationToUser")
+  Profiles   Profile[] @relation("ConversationToProfile")
 }
 
-enum UserRole {
+enum ProfileRole {
   ADMIN
-  USER
+  Profile
 }
