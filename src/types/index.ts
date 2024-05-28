@@ -1,8 +1,8 @@
-import type { Message, User, Conversation } from "@prisma/client";
+import type { Message, Profile, Conversation } from "@prisma/client";
 
 export interface IMessage extends Message {
-	sender: User;
-	receiver: User;
+	sender: Profile;
+	receiver: Profile;
 	conversation: Conversation;
 }
 
